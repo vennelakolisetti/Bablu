@@ -9,8 +9,5 @@ int main() {
   printf("value of a = %d\n", *b);
   printf("value of a = %i\n", *b);
   printf(" adress of a = %p\n", &b);  
-  
-
-
   return 0;
 }
