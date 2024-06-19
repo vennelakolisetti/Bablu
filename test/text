@@ -1,0 +1,21 @@
+Double Quotes ("..."): 
+The preprocessor first searches the same directory as the source file, then the standard directories.
+Angle Brackets (<...>): 
+The preprocessor searches only in the standard directories pre-designated by the compiler.
+
+Avoiding Dangling Pointers:
+After freeing memory, set the pointer to NULL to avoid accidental dereferencing:
+free(a);
+a = NULL;
+
+Preventing Memory Leaks:
+Ensure every malloc (or similar allocation function) has a corresponding free:
+int *a = (int *)malloc(sizeof(int));
+// use the allocated memory
+free(a); // free the allocated memory when done
+Use tools like Valgrind to detect memory leaks and dangling pointers in your programs.\
+
+
+This ensures that the macro arguments are correctly grouped. However, to fully avoid side effects,
+you should use inline functions or standard functions instead of macros:
+Using an inline function guarantees that the argument is only evaluated once.
