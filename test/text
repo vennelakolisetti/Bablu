@@ -32,3 +32,7 @@ So err is a new name for enum error.
 The modulus (%) operator can only be used on integer types. We have to use fmod() function in math.h for float values
 
 The switch/case statement in the c language is defined by the language specification to use an int value, so you can not use a float value.
+
+ gdb ./a.out layout split
+
+ The keyword continue cannot be used in switch case. It must be used in for or while or do while loop. If there is any looping statement in switch case then we can use continue.
