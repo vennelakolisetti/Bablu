@@ -19,3 +19,16 @@ Use tools like Valgrind to detect memory leaks and dangling pointers in your pro
 This ensures that the macro arguments are correctly grouped. However, to fully avoid side effects,
 you should use inline functions or standard functions instead of macros:
 Using an inline function guarantees that the argument is only evaluated once.
+
+
+To over come this error, we have to add function prototype of function display()
+
+
+ typedef enum error { warning, test, exception } err; 
+ A typedef gives a new name to an existing data type.
+So err is a new name for enum error.
+
+
+The modulus (%) operator can only be used on integer types. We have to use fmod() function in math.h for float values
+
+The switch/case statement in the c language is defined by the language specification to use an int value, so you can not use a float value.
