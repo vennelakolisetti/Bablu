@@ -1,0 +1,116 @@
+ MQTTCLIENT -HOST MODE -everthing will done at the host side 
+embeddedmqttclient.c -embedded mode - just we send information and everthing firmware will take care.
+
+
+
+connection_cmd_parse 
+
+ 
+                  
+third party
+
+need to create one folder to integrate paho there 
+check mqtt in 9116 how they are integrate there  and as well as how aws and  azure  
+ in wisconnect3.yakka we need to add our component 
+and in .slcc nee to add all files in the component
+
+
+
+if we want add any component in sl_net need to add in
+wiseconnect3.yakka
+wideconnect3.slce
+
+all the files in our component need to add in .slcc file
+
+
+if we want to reflect that component in our application we should add in (anyapplication).slcp 
+
+https://github.com/mongoose-os-libs/mqtt/tree/master/src
+
+
+
+https://datatracker.ietf.org/doc/html/rfc6455
+
+
+
+WebSocket
+int websocket_connect(Network* n, char* address, int port) {
+    // Implement WebSocket connection logic using SLNet functions
+    // Perform WebSocket handshake
+    // Return success or failure
+}
+
+int websocket_read(Network* n, unsigned char* buffer, int len, int timeout_ms) {
+    // Implement WebSocket frame reading logic
+    // Return the number of bytes read
+}
+
+int websocket_write(Network* n, unsigned char* buffer, int len, int timeout_ms) {
+    // Implement WebSocket frame writing logic
+    // Return the number of bytes written
+}
+
+// Update the network initialization to use WebSocket functions
+void NetworkInit(Network* n) {
+    n->mqttread = websocket_read;
+    n->mqttwrite = websocket_write;
+    n->connect = websocket_connect;
+    n->disconnect = websocket_disconnect;
+}
+
+#include "Network.h"
+#include "WebSocket.h"
+#include "TCP.h"
+
+typedef enum {
+    NETWORK_TYPE_TCP,
+    NETWORK_TYPE_WEBSOCKET
+} NetworkType;
+
+typedef struct {
+    NetworkType type;
+    Network network;
+} CustomNetwork;
+
+int custom_connect(CustomNetwork* cn, char* address, int port) {
+    if (cn->type == NETWORK_TYPE_TCP) {
+        return tcp_connect(&cn->network, address, port);
+    } else if (cn->type == NETWORK_TYPE_WEBSOCKET) {
+        return websocket_connect(&cn->network, address, port);
+    }
+    return -1; // Invalid network type
+}
+
+int custom_read(CustomNetwork* cn, unsigned char* buffer, int len, int timeout_ms) {
+    if (cn->type == NETWORK_TYPE_TCP) {
+        return tcp_read(&cn->network, buffer, len, timeout_ms);
+    } else if (cn->type == NETWORK_TYPE_WEBSOCKET) {
+        return websocket_read(&cn->network, buffer, len, timeout_ms);
+    }
+    return -1; // Invalid network type
+}
+
+int custom_write(CustomNetwork* cn, unsigned char* buffer, int len, int timeout_ms) {
+    if (cn->type == NETWORK_TYPE_TCP) {
+        return tcp_write(&cn->network, buffer, len, timeout_ms);
+    } else if (cn->type == NETWORK_TYPE_WEBSOCKET) {
+        return websocket_write(&cn->network, buffer, len, timeout_ms);
+    }
+    return -1; // Invalid network type
+}
+
+void CustomNetworkInit(CustomNetwork* cn, NetworkType type) {
+    cn->type = type;
+    NetworkInit(&cn->network);
+    cn->network.connect = (int (*)(Network*, char*, int))custom_connect;
+    cn->network.mqttread = (int (*)(Network*, unsigned char*, int, int))custom_read;
+    cn->network.mqttwrite = (int (*)(Network*, unsigned char*, int, int))custom_write;
+    cn->network.disconnect = (int (*)(Network*))NetworkDisconnect;
+}
+
+
+
+
+
+
+

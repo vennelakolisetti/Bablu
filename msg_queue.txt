@@ -1,0 +1,55 @@
+header.h
+---------
+#include <fcntl.h>
+#include <sys/ipc.h>
+#include <sys/stat.h>
+#include <mqueue.h>
+#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
+#define MAX 100
+
+sender.c
+--------
+
+#include "header.h"
+
+int a(mqd_t);
+int main()
+{
+    struct mq_attr attr;
+    char buff[MAX];
+    mqd_t msg_create;
+    attr.mq_flags = 0;
+    attr.mq_maxmsg = 10;
+    attr.mq_msgsize = MAX;
+    attr.mq_curmsgs = 0;
+
+    msg_create = mq_open("/msg_queue", O_CREAT | O_WRONLY, 0644, &attr);
+    printf("%d \n", msg_create);
+    printf("Enter the data : \n");
+    fgets(buff, MAX, stdin);
+    mq_send(msg_create, buff, sizeof(buff), strlen(buff));
+    printf("The data sent is : %s\n", buff);
+    mq_close(msg_create);
+    return 0;
+}
+
+receiver.c
+----------
+#include "header.h"
+
+int main()
+{
+    mqd_t msg_create;
+
+    char buff[MAX];
+
+    msg_create = mq_open("/msg_queue", O_CREAT|O_RDONLY);
+
+    mq_receive(msg_create, buff, sizeof(buff), (int *)10);
+
+    printf("The received data : %s \n", buff);
+
+    return 0;
+}

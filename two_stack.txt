@@ -1,0 +1,81 @@
+#include <stdio.h>
+#include <stdlib.h>
+#define size 10
+int i;
+int stack[size];
+int top1 = -1;
+int top2 = size;
+
+int *stack1 = &stack[0];
+int *stack2 = &stack[size-1];
+
+void push(int, int *);
+void display(int []);
+
+int main()
+{
+    int choice;
+    int element;
+    do {
+        printf("1.Push at stack1\n2.Push at stack2\n3.Display\n4.Exit\n");
+        printf("Enter the choice : \n");
+        scanf("%d", &choice);
+        switch(choice) {
+            case 1:
+                printf("Enter the element to be inserted in the stack 1 : \n");
+                scanf("%d", &element);
+                push(element, stack1);
+                break;
+            case 2:
+                printf("Enter the element to be inserted in the stack 2 : \n");
+                scanf("%d", &element);
+                push(element, stack2);
+                break;
+            case 3:
+                display(stack);
+                break;
+            case 4:
+                printf("Exit\n");
+                exit(0);
+            default :
+                printf("Enter the correct choice !!\n");
+                break;
+        }
+    }while(choice != 4);
+}
+
+void push(int element, int *s)
+{
+    if (s == &stack[0]) {
+        if ((top1 + 1) == top2) {
+            printf("stack overflow detected, stack is full\n");
+        } else {
+            top1++;
+            stack[top1] = element;
+            printf("The element, which is pushed in stack1 is %d\n", stack[top1]);
+        }
+    }
+
+    if (s == &stack[size-1]) {
+        if ((top2 - 1) == top1) {
+            printf("stack overflow detected, stack is full\n");
+        } else {
+            top2--;
+            stack[top2] = element;
+            printf("The element, which is pushed in stack2 is %d\n", stack[top2]);
+        }
+    }
+
+}
+
+void display(int stack[]) {
+    printf("The elements present in the stack are : \n");
+    printf("stack[%d] = { ", size);
+    for (i = 0; i < size; i++) {
+        printf("%d", stack[i]);
+        if(i != size-1) {
+            printf(", ");
+        }
+    }
+    printf(" }\n");
+}
